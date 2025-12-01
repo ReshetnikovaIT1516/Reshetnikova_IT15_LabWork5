@@ -44,14 +44,79 @@ public class Methods {
         Validator.validateNotNull(filename, "Имя файла не может быть null");
 
         List<String> students = new ArrayList<>();
+        int expectedCount = 0;
+        int actualCount = 0;
+        boolean isFirstLine = true;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                if (!line.isEmpty()) {
-                    students.add(line);
+
+                if (line.isEmpty()) {
+                    continue; // Пропускаем пустые строки
                 }
+
+                // Первая строка - количество учеников
+                if (isFirstLine) {
+                    try {
+                        expectedCount = Integer.parseInt(line);
+                        if (expectedCount <= 0) {
+                            throw new IllegalArgumentException(
+                                    "Количество учеников должно быть больше 0, а не: " + expectedCount
+                            );
+                        }
+                        if (expectedCount > 100) {
+                            throw new IllegalArgumentException(
+                                    "Количество учеников не должно превышать 100, а не: " + expectedCount
+                            );
+                        }
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException(
+                                "Первая строка файла должна содержать количество учеников (число), а не: " + line
+                        );
+                    }
+                    isFirstLine = false;
+                    continue; // Пропускаем первую строку, она уже обработана
+                }
+
+                // Проверка формата Фамилия Имя
+                String[] parts = line.split("\\s+");
+                if (parts.length < 2) {
+                    throw new IllegalArgumentException(
+                            "Неверный формат строки ученика: '" + line +
+                                    "'. Ожидается: Фамилия Имя"
+                    );
+                }
+
+                String surname = parts[0];
+                String name = parts[1];
+
+                // Проверка длины фамилии и имени
+                if (surname.length() > 20) {
+                    throw new IllegalArgumentException(
+                            "Фамилия '" + surname + "' слишком длинная. Максимум 20 символов."
+                    );
+                }
+
+                if (name.length() > 15) {
+                    throw new IllegalArgumentException(
+                            "Имя '" + name + "' слишком длинное. Максимум 15 символов."
+                    );
+                }
+
+                students.add(line);
+                actualCount++;
             }
+
+            // Проверка соответствия количества
+            if (expectedCount != actualCount) {
+                throw new IllegalArgumentException(
+                        "Несоответствие количества учеников. Ожидалось: " +
+                                expectedCount + ", фактически: " + actualCount
+                );
+            }
+
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("Файл не найден: " + filename);
         } catch (IOException e) {
@@ -62,14 +127,10 @@ public class Methods {
             throw new IllegalArgumentException("Файл пуст: " + filename);
         }
 
-        if (students.size() > 100) {
-            throw new IllegalArgumentException("Количество учеников не должно превышать 100");
-        }
-
         return students;
     }
 
-    // Основной метод генерации логинов (остается без изменений)
+    // Основной метод генерации логинов
     public static Map<String, String> generateStudentLogins(List<String> students) {
         Validator.validateNotNull(students, "Список учеников не может быть null");
 
@@ -81,7 +142,7 @@ public class Methods {
                 continue;
             }
 
-            String[] parts = student.split(" ", 2);
+            String[] parts = student.split("\\s+", 2);
             if (parts.length < 2) {
                 continue;
             }
