@@ -1,0 +1,19 @@
+package ru.reshetnikova;
+
+import java.util.Random;
+
+public class Funs {
+    public static void meowsCare(Meow... meows) {
+        Random random = new Random();
+        // Генерируем случайное количество мяуканий от 1 до 10
+        int meowCount = random.nextInt(10) + 1;
+
+        System.out.println("Кот будет мяукать " + meowCount + " раз:");
+
+        for (int i = 0; i < meowCount; i++) {
+            for (Meow meow : meows) {
+                meow.meow();
+            }
+        }
+    }
+}
