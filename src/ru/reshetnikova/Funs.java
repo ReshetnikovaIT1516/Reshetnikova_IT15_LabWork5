@@ -3,7 +3,7 @@ package ru.reshetnikova;
 import java.util.Random;
 
 public class Funs {
-    public static void meowsCare(Meow... meows) {
+    public static void meowsCare(Meow... meows) { // Позволяет методу принимать от 0 до N аргументов указанного типа
         Random random = new Random();
         // Генерируем случайное количество мяуканий от 1 до 10
         int meowCount = random.nextInt(10) + 1;
