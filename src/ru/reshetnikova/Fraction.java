@@ -35,7 +35,7 @@ public class Fraction implements FractionInterface {
         this.numerator = numerator;
         this.denominator = denominator;
     }
-
+    // Конструктор по молчанию
     public Fraction() {
         this(1, 1);
     }
@@ -70,7 +70,7 @@ public class Fraction implements FractionInterface {
 
     // Метод для упрощения дроби
     public Fraction simplify() {
-        int gcd = gcd(Math.abs(numerator), denominator);
+        int gcd = gcd(Math.abs(numerator), denominator); // НОД
         return new Fraction(numerator / gcd, denominator / gcd);
     }
 
