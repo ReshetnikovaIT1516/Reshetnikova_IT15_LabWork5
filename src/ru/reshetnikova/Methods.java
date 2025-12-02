@@ -173,6 +173,7 @@ public class Methods {
         for (String fullName : logins.keySet()) {
             sb.append(fullName).append("\n");
         }
+
         sb.append("\nСформированные логины:\n");
 
         // Выводим только значения (логины) в порядке их создания
@@ -225,7 +226,7 @@ public class Methods {
         // Создаем новую очередь и перекладываем элементы из стека обратно
         Queue<T> reversedQueue = new LinkedList<>();
         while (!stack.isEmpty()) {
-            reversedQueue.add(stack.pop());
+            reversedQueue.add(stack.pop()); // Извлекает элемент из стека и добавляет его в новую очередь
         }
 
         return reversedQueue;
@@ -249,7 +250,7 @@ public class Methods {
                 .map(p -> new Point(p.getX(), Math.abs(p.getY()))) // сначала преобразуем Y
                 .distinct()                      // потом убираем дубликаты
                 .sorted(Comparator.comparingDouble(Point::getX)) // сортировка по X
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); // Собирает результаты обработки стрима в список
 
         return new Polyline(result);
     }
@@ -285,8 +286,8 @@ public class Methods {
                         return new AbstractMap.SimpleEntry<>(formattedName, number);
                     })
                     .collect(Collectors.groupingBy(
-                            Map.Entry::getValue,
-                            Collectors.mapping(Map.Entry::getKey, Collectors.toList())
+                            Map.Entry::getValue,   // Ключ группировки (по номеру)
+                            Collectors.mapping(Map.Entry::getKey, Collectors.toList()) // Что и куда извлекать
                     ));
 
             return result;
